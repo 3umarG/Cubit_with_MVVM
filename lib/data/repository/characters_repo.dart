@@ -13,9 +13,9 @@ class CharactersRepository {
   Future<Either<Failure, List<CharacterModel>>> fetchAllCharacters() async {
     try {
       return Right(await api.getAllCharacters());
-    } on DataParsingFailure catch (e) {
+    } on DataParsingException catch (e) {
       return Left(DataParsingFailure(e.errorObject));
-    } on NoConnectionFailure catch (e) {
+    } on NoConnectionException catch (e) {
       return Left(NoConnectionFailure(e.errorObject));
     } on ServerException catch (e) {
       return Left(ServerFailure(e.errorObject));

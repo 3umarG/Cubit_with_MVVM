@@ -34,6 +34,7 @@ class CharactersCubit extends Cubit<CharactersState> {
       (characters) {
         this.characters = characters;
         emit(CharactersStateLoaded(characters));
+        debugPrint(this.characters.toString());
       },
     );
   }
