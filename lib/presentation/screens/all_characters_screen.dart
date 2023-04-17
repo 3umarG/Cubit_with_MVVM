@@ -26,7 +26,13 @@ class _AllCharactersScreenState extends State<AllCharactersScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Rick And Morty Characters"),
+        title: const Text(
+          "Rick And Morty Characters",
+          style: TextStyle(
+            color: grey,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         backgroundColor: yellow,
       ),
       body: Container(
@@ -34,8 +40,8 @@ class _AllCharactersScreenState extends State<AllCharactersScreen> {
         child: BlocBuilder<CharactersCubit, CharactersState>(
             builder: (context, state) {
           if (state is CharactersStateLoading) {
-            return const Center(
-              child: CircularProgressIndicator(color: yellow,),
+            return  Center(
+              child: Image.asset('assets/images/loading.gif')
             );
           } else if (state is CharactersStateError) {
             return Center(
