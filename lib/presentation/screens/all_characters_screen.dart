@@ -1,5 +1,6 @@
 import 'package:cubit_tutorial/business/cubit/characters_cubit.dart';
 import 'package:cubit_tutorial/core/constants/colors.dart';
+import 'package:cubit_tutorial/data/models/character_model.dart';
 import 'package:cubit_tutorial/presentation/widgets/character_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,46 @@ class AllCharactersScreen extends StatefulWidget {
 }
 
 class _AllCharactersScreenState extends State<AllCharactersScreen> {
+  final _searchEditingController = TextEditingController();
+  bool _isSearching = false;
+  List<CharacterModel> _searchedList = [];
+  late List<CharacterModel> _allCharacters;
+
+  Widget _buildAppBarTitle() => const Text(
+        "Rick And Morty Characters",
+        style: TextStyle(
+          color: grey,
+          fontWeight: FontWeight.bold,
+        ),
+      );
+
+  Widget _buildSearchBar() => TextField(
+        controller: _searchEditingController,
+        style: const TextStyle(
+          color: grey,
+          fontSize: 18,
+        ),
+        onChanged: (searchQuery) {
+          setState(() {
+            _searchedList = _allCharacters
+                .where((character) => character.name
+                    .toLowerCase()
+                    .contains(searchQuery.toLowerCase()))
+                .toList();
+          });
+        },
+        decoration: const InputDecoration(
+          hintText: "Search Character ...",
+          border: InputBorder.none,
+          hintStyle: TextStyle(
+            color: grey,
+            fontSize: 18,
+          ),
+        ),
+        cursorColor: grey,
+        maxLines: 1,
+      );
+
   @override
   void initState() {
     super.initState();
@@ -23,18 +64,63 @@ class _AllCharactersScreenState extends State<AllCharactersScreen> {
     );
   }
 
+  List<Widget> _buildActionsForAppBar() {
+    if (_isSearching) {
+      // X button
+      return [
+        IconButton(
+          onPressed: () {
+            setState(() {
+              // Clear and Close
+              _searchEditingController.clear();
+            });
+          },
+          icon: const Icon(
+            Icons.clear,
+            color: grey,
+          ),
+        ),
+      ];
+    } else {
+      return [
+        IconButton(
+          onPressed: _startSearching,
+          icon: const Icon(
+            Icons.search,
+            color: grey,
+          ),
+        ),
+      ];
+    }
+  }
+
+  void _startSearching() {
+    setState(() {
+      _isSearching = true;
+      ModalRoute.of(context)!
+          .addLocalHistoryEntry(LocalHistoryEntry(onRemove: _stopSearching));
+    });
+  }
+
+  void _stopSearching() {
+    setState(() {
+      _isSearching = false;
+      _searchEditingController.clear();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          "Rick And Morty Characters",
-          style: TextStyle(
-            color: grey,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+        title: _isSearching ? _buildSearchBar() : _buildAppBarTitle(),
+        leading: _isSearching
+            ? const BackButton(
+                color: grey,
+              )
+            : const SizedBox(),
         backgroundColor: yellow,
+        actions: _buildActionsForAppBar(),
       ),
       body: Container(
         color: grey,
@@ -51,7 +137,7 @@ class _AllCharactersScreenState extends State<AllCharactersScreen> {
               child: Text(state.message),
             );
           } else if (state is CharactersStateLoaded) {
-            var characters = state.characters;
+            _allCharacters = state.characters;
             return Center(
               child: GridView.builder(
                 physics: const BouncingScrollPhysics(),
@@ -62,8 +148,17 @@ class _AllCharactersScreenState extends State<AllCharactersScreen> {
                   mainAxisSpacing: 4,
                   childAspectRatio: 2 / 3,
                 ),
+                itemCount:
+                     _searchEditingController.text.isEmpty
+                        ? _allCharacters.length
+                        : _searchedList.length,
                 itemBuilder: (context, index) {
-                  return CharacterItem(character: characters[index]);
+                  return CharacterItem(
+                    character:
+                         _searchEditingController.text.isEmpty
+                            ? _allCharacters[index]
+                            : _searchedList[index],
+                  );
                 },
               ),
             );
