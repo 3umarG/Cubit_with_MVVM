@@ -1,5 +1,6 @@
 import 'package:cubit_tutorial/business/cubit/characters_cubit.dart';
 import 'package:cubit_tutorial/core/constants/colors.dart';
+import 'package:cubit_tutorial/presentation/widgets/character_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -40,20 +41,34 @@ class _AllCharactersScreenState extends State<AllCharactersScreen> {
         child: BlocBuilder<CharactersCubit, CharactersState>(
             builder: (context, state) {
           if (state is CharactersStateLoading) {
-            return  Center(
-              child: Image.asset('assets/images/loading.gif')
-            );
+            return const Center(
+                child: CircularProgressIndicator(
+              strokeWidth: 8,
+              color: yellow,
+            ));
           } else if (state is CharactersStateError) {
             return Center(
               child: Text(state.message),
             );
-          } else {
-            return const Center(
-              child: Text(
-                "Loaded Successfully !!",
-                style: TextStyle(fontSize: 35),
+          } else if (state is CharactersStateLoaded) {
+            var characters = state.characters;
+            return Center(
+              child: GridView.builder(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(6),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  crossAxisSpacing: 4,
+                  mainAxisSpacing: 4,
+                  childAspectRatio: 2 / 3,
+                ),
+                itemBuilder: (context, index) {
+                  return CharacterItem(character: characters[index]);
+                },
               ),
             );
+          } else {
+            return const SizedBox();
           }
         }),
       ),
