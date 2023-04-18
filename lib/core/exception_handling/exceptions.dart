@@ -14,6 +14,6 @@ class DataParsingException extends ApiException {
   DataParsingException(super.errorObject);
 }
 
-class NoConnectionException extends ApiException {
-  NoConnectionException(super.errorObject);
-}
+// class NoConnectionException extends ApiException {
+//   NoConnectionException(super.errorObject);
+// }

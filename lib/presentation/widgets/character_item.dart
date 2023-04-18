@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cubit_tutorial/data/models/character_model.dart';
 import 'package:flutter/material.dart';
 
@@ -50,15 +51,36 @@ class CharacterItem extends StatelessWidget {
           child: Container(
             child: character.imageUrl.isEmpty
                 ? Image.asset("assets/images/failed.gif")
-                : FadeInImage.assetNetwork(
-                    placeholder: "assets/images/loading.gif",
-                    fit: BoxFit.cover,
-                    imageErrorBuilder: (_, ob, stack) =>
-                        Image.asset("assets/images/failed.gif"),
-                    height: double.infinity,
-                    width: double.infinity,
-                    image: character.imageUrl,
+                : CachedNetworkImage(
+                    imageUrl: character.imageUrl,
+                    imageBuilder: (context, imageProvider) => Container(
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: imageProvider,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                    placeholder: (context, url) =>
+                        Image.asset("assets/images/loading.gif"),
+                    errorWidget: (context, url, error) => Container(
+                      decoration: const BoxDecoration(
+                        image: DecorationImage(
+                          image:AssetImage("assets/images/failed.gif"),
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
                   ),
+            // FadeInImage.assetNetwork(
+            //         placeholder: "assets/images/loading.gif",
+            //         fit: BoxFit.cover,
+            //         imageErrorBuilder: (_, ob, stack) =>
+            //             Image.asset("assets/images/failed.gif"),
+            //         height: double.infinity,
+            //         width: double.infinity,
+            //         image: character.imageUrl,
+            //       ),
           ),
         ),
       ),

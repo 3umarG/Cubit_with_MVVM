@@ -14,6 +14,6 @@ class DataParsingFailure extends Failure {
   DataParsingFailure(super.errorObject);
 }
 
-class NoConnectionFailure extends Failure {
-  NoConnectionFailure(super.errorObject);
-}
+// class NoConnectionFailure extends Failure {
+//   NoConnectionFailure(super.errorObject);
+// }

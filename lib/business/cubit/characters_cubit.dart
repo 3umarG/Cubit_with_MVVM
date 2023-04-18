@@ -10,6 +10,7 @@ part 'characters_state.dart';
 class CharactersCubit extends Cubit<CharactersState> {
   final CharactersRepository repo;
   late List<CharacterModel> characters;
+
   CharactersCubit(this.repo) : super(CharactersInitial());
 
   Future<void> fetchAllCharacters() async {
@@ -18,18 +19,17 @@ class CharactersCubit extends Cubit<CharactersState> {
 
     result.fold(
       (failure) {
-        switch(failure.runtimeType) {
+        switch (failure.runtimeType) {
           case ServerFailure:
             emit(CharactersStateErrorServer(failure.errorObject.message));
             break;
-          case NoConnectionFailure:
-            emit(CharactersStateErrorNoConnection(failure.errorObject.message));
-            break;
+          // case NoConnectionFailure:
+          //   emit(CharactersStateErrorNoConnection(failure.errorObject.message));
+          //   break;
           case DataParsingFailure:
             emit(CharactersStateErrorDataParsing(failure.errorObject.message));
             break;
         }
-
       },
       (characters) {
         this.characters = characters;

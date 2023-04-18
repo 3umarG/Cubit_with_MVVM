@@ -4,7 +4,6 @@ import 'package:cubit_tutorial/core/exception_handling/exceptions.dart';
 import 'package:cubit_tutorial/data/models/character_model.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:flutter/material.dart';
 
 import '../../../core/constants/strings.dart';
 import '../../../core/exception_handling/error_object.dart';
@@ -19,7 +18,7 @@ class ApiServices {
         receiveTimeout: const Duration(seconds: 20),
         receiveDataWhenStatusError: true);
     dio = Dio(options);
-    (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+    (dio.httpClientAdapter as IOHttpClientAdapter).onHttpClientCreate =
         (HttpClient client) {
       client.badCertificateCallback =
           (X509Certificate cert, String host, int port) => true;
@@ -47,18 +46,17 @@ class ApiServices {
         ));
       }
     } catch (e) {
-      if ((e is ServerException) || (e is DataParsingException)) {
-        rethrow;
-      } else {
-        debugPrint(e.toString());
-        throw NoConnectionException(
-          ErrorObject(
-            statusCode: 0,
-            message:
-                "No Internet Connection , Please check your Connectivity !!",
-          ),
-        );
-      }
+      rethrow;
+      // else {
+      //   debugPrint(e.toString());
+      //   throw NoConnectionException(
+      //     ErrorObject(
+      //       statusCode: 0,
+      //       message:
+      //           "No Internet Connection , Please check your Connectivity !!",
+      //     ),
+      //   );
+      // }
     }
   }
 }

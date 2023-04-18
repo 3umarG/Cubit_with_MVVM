@@ -2,8 +2,10 @@ import 'package:cubit_tutorial/business/cubit/characters_cubit.dart';
 import 'package:cubit_tutorial/core/constants/colors.dart';
 import 'package:cubit_tutorial/data/models/character_model.dart';
 import 'package:cubit_tutorial/presentation/widgets/character_item.dart';
+import 'package:cubit_tutorial/presentation/widgets/no_internet_custom.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_offline/flutter_offline.dart';
 
 class AllCharactersScreen extends StatefulWidget {
   const AllCharactersScreen({Key? key}) : super(key: key);
@@ -138,29 +140,42 @@ class _AllCharactersScreenState extends State<AllCharactersScreen> {
             );
           } else if (state is CharactersStateLoaded) {
             _allCharacters = state.characters;
-            return Center(
-              child: GridView.builder(
-                physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.all(6),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 4,
-                  mainAxisSpacing: 4,
-                  childAspectRatio: 2 / 3,
-                ),
-                itemCount:
-                     _searchEditingController.text.isEmpty
-                        ? _allCharacters.length
-                        : _searchedList.length,
-                itemBuilder: (context, index) {
-                  return CharacterItem(
-                    character:
-                         _searchEditingController.text.isEmpty
-                            ? _allCharacters[index]
-                            : _searchedList[index],
+            return OfflineBuilder(
+              connectivityBuilder: (
+                BuildContext context,
+                ConnectivityResult connectivity,
+                Widget child,
+              ) {
+                final bool connected = connectivity != ConnectivityResult.none;
+                if (connected) {
+                  return Center(
+                    child: GridView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      padding: const EdgeInsets.all(6),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 4,
+                        mainAxisSpacing: 4,
+                        childAspectRatio: 2 / 3,
+                      ),
+                      itemCount: _searchEditingController.text.isEmpty
+                          ? _allCharacters.length
+                          : _searchedList.length,
+                      itemBuilder: (context, index) {
+                        return CharacterItem(
+                          character: _searchEditingController.text.isEmpty
+                              ? _allCharacters[index]
+                              : _searchedList[index],
+                        );
+                      },
+                    ),
                   );
-                },
-              ),
+                } else {
+                  return child;
+                }
+              },
+              child: const NoInternetCustomWidget(),
             );
           } else {
             return const SizedBox();

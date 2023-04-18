@@ -15,10 +15,11 @@ class CharactersRepository {
       return Right(await api.getAllCharacters());
     } on DataParsingException catch (e) {
       return Left(DataParsingFailure(e.errorObject));
-    } on NoConnectionException catch (e) {
-      return Left(NoConnectionFailure(e.errorObject));
     } on ServerException catch (e) {
       return Left(ServerFailure(e.errorObject));
     }
+    // on NoConnectionException catch (e) {
+    //   return Left(NoConnectionFailure(e.errorObject));
+    // }
   }
 }

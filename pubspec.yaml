@@ -39,6 +39,7 @@ dependencies:
   flutter_bloc: ^8.1.2
   flutter_offline: ^2.1.0
   dartz: ^0.10.1
+  cached_network_image: ^3.2.3
 
 dev_dependencies:
   flutter_test:
@@ -67,6 +68,7 @@ flutter:
     - assets/images/loading.gif
     - assets/images/failed.gif
     - assets/images/rick.jpeg
+    - assets/images/no_internet.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
