@@ -1,16 +1,10 @@
-# cubit_tutorial
+# Cubit Demo Project
 
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## This Project include : 
+ - [Rick and Morty Api for test REST API](https://rickandmortyapi.com/documentation/).
+ - BLoC -Cubit- as Statemanagment.
+ - Some illustration and animated images with lottie and unDraw.
+ - MVVM & Repository pattern.
+ - Try to Apply all SOLID principles.
+ - Exceptions Handling with all possible types in Clean Architecture way.
+ - Used routes managament to manage all routes of my entire screens.
